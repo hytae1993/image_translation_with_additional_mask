@@ -9,4 +9,3 @@ paper: [Unsupervised Image to Image Translation With Additional Mask](https://ie
 
 
 ## Segmentation Results with Pascal VOC dataset
-![image](https://ieeexplore.ieee.org/mediastore/IEEE/content/media/6287639/10005208/10272577/hong1-3322146-large.gif)
