@@ -5,7 +5,7 @@ paper: [Unsupervised Image to Image Translation With Additional Mask](https://ie
 
 ## Network structure
 ### Supervised Network
-![image](https://ieeexplore.ieee.org/mediastore/IEEE/content/media/6287639/10005208/10272577/hong2-3322146-large.gif)
+![image](https://ieeexplore.ieee.org/mediastore/IEEE/content/media/6287639/10005208/10272577/hong2-3322146-large.jpg)
 ### Proposed Network
 ![image](https://ieeexplore.ieee.org/ielx7/6287639/10005208/10272577/graphical_abstract/access-gagraphic-3322146.jpg)
 
