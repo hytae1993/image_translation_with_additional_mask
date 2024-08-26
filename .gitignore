@@ -1,0 +1,13 @@
+checkpoints/
+datasets/
+tempt/
+wandb/
+models/attention_gan_model.py
+models/base_mode.py
+models/colorization_model.py
+models/cycle_gan_model.py
+models/networks.py
+models/pix2pix_model.py
+models/template_model.py
+models/test_model.py
+*.pyc

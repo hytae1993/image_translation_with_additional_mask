@@ -5,6 +5,7 @@ import ntpath
 import time
 from . import util, html
 from subprocess import Popen, PIPE
+from time import strptime
 
 
 try:
@@ -82,21 +83,24 @@ class Visualizer():
 
         if self.display_id > 0:  # connect to a visdom server given <display_port> and <display_server>
             import visdom
-            self.vis = visdom.Visdom(server=opt.display_server, port=opt.display_port, env=opt.display_env)
+            env = opt.model + "_" + opt.display_env + "_" + opt.time
+            # self.vis = visdom.Visdom(server=opt.display_server, port=opt.display_port, env=opt.display_env)
+            self.vis = visdom.Visdom(server=opt.display_server, port=opt.display_port, env=env)
             if not self.vis.check_connection():
                 self.create_visdom_connections()
 
         if self.use_wandb:
-            self.wandb_run = wandb.init(project=self.wandb_project_name, name=opt.name, config=opt) if not wandb.run else wandb.run
+            name = opt.name + "_" + opt.time
+            self.wandb_run = wandb.init(project=self.wandb_project_name, name=name, config=opt) if not wandb.run else wandb.run
             self.wandb_run._label(repo='CycleGAN-and-pix2pix')
 
         if self.use_html:  # create an HTML object at <checkpoints_dir>/web/; images will be saved under <checkpoints_dir>/web/images/
-            self.web_dir = os.path.join(opt.checkpoints_dir, opt.name, 'web')
+            self.web_dir = os.path.join(opt.checkpoints_dir, opt.model, opt.name, opt.time, 'web')
             self.img_dir = os.path.join(self.web_dir, 'images')
             print('create web directory %s...' % self.web_dir)
             util.mkdirs([self.web_dir, self.img_dir])
         # create a logging file to store training losses
-        self.log_name = os.path.join(opt.checkpoints_dir, opt.name, 'loss_log.txt')
+        self.log_name = os.path.join(opt.checkpoints_dir, opt.model, opt.name, opt.time, 'loss_log.txt')
         with open(self.log_name, "a") as log_file:
             now = time.strftime("%c")
             log_file.write('================ Training Loss (%s) ================\n' % now)
@@ -222,18 +226,18 @@ class Visualizer():
             self.plot_data = {'X': [], 'Y': [], 'legend': list(losses.keys())}
         self.plot_data['X'].append(epoch + counter_ratio)
         self.plot_data['Y'].append([losses[k] for k in self.plot_data['legend']])
-        try:
-            self.vis.line(
-                X=np.stack([np.array(self.plot_data['X'])] * len(self.plot_data['legend']), 1),
-                Y=np.array(self.plot_data['Y']),
-                opts={
-                    'title': self.name + ' loss over time',
-                    'legend': self.plot_data['legend'],
-                    'xlabel': 'epoch',
-                    'ylabel': 'loss'},
-                win=self.display_id)
-        except VisdomExceptionBase:
-            self.create_visdom_connections()
+        # try:
+        #     self.vis.line(
+        #         X=np.stack([np.array(self.plot_data['X'])] * len(self.plot_data['legend']), 1),
+        #         Y=np.array(self.plot_data['Y']),
+        #         opts={
+        #             'title': self.name + ' loss over time',
+        #             'legend': self.plot_data['legend'],
+        #             'xlabel': 'epoch',
+        #             'ylabel': 'loss'},
+        #         win=self.display_id)
+        # except VisdomExceptionBase:
+        #     self.create_visdom_connections()
         if self.use_wandb:
             self.wandb_run.log(losses)
 
